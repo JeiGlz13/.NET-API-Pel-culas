@@ -31,7 +31,8 @@ namespace PeliculasAPI.Controllers
         [HttpGet("{idGenero:int}", Name = "obtenerGenero")]
         public async Task<ActionResult<GeneroDTO>> GetGenero(int idGenero)
         {
-            var entidad = await _context.Generos.FirstOrDefaultAsync(genero => genero.Id == idGenero);
+            var entidad = await _context.Generos
+                            .FirstOrDefaultAsync(genero => genero.Id == idGenero);
 
             if (entidad == null)
             {
