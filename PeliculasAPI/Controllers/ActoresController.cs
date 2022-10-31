@@ -1,8 +1,11 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using Microsoft.EntityFrameworkCore;
 using PeliculasAPI.DTOs;
 using PeliculasAPI.Entidades;
+using PeliculasAPI.Servicios;
 
 namespace PeliculasAPI.Controllers
 {
@@ -12,13 +15,18 @@ namespace PeliculasAPI.Controllers
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
+        private readonly IAlmacenadorArchivos _almacenadorArchivo;
+        private readonly string _contenedor = "actores";
         public ActoresController(
             ApplicationDbContext context,
             IMapper mapper
+,           IAlmacenadorArchivos almacenadorArchivo
         )
         {
             _context = context;
             _mapper = mapper;
+            _almacenadorArchivo = almacenadorArchivo;
+
         }
 
         [HttpGet]
@@ -44,34 +52,92 @@ namespace PeliculasAPI.Controllers
         public async Task<ActionResult> PostActor([FromForm] AgregarActorDTO actorDTO)
         {
             var entidad = _mapper.Map<Actor>(actorDTO);
-            _context.Actores.Add(entidad);
+            if (actorDTO.Foto != null)
+            {
+                using(var memoryStream = new MemoryStream())
+                {
+                    await actorDTO.Foto.CopyToAsync(memoryStream);
+                    var contenido = memoryStream.ToArray();
+                    var extension = Path.GetExtension(actorDTO.Foto.FileName);
+                    entidad.Foto = await _almacenadorArchivo
+                        .GuardarArchivo(contenido, extension, _contenedor, actorDTO.Foto.ContentType);
+                }
+            }
+            _context.Add(entidad);
             await _context.SaveChangesAsync();
             var dto = _mapper.Map<ActorDTO>(entidad);
             return new CreatedAtRouteResult("obtenerActor", new { id = entidad.Id, dto });
         }
 
         [HttpPut("{id:int}")]
-        public async Task<ActionResult> PutActor (int id, [FromBody] AgregarActorDTO agregarActorDTO)
+        public async Task<ActionResult> PutActor (int id, [FromForm] AgregarActorDTO agregarActorDTO)
         {
-            var entidad = _mapper.Map<Actor>(agregarActorDTO);
-            entidad.Id = id;
-            _context.Entry(entidad).State = EntityState.Modified;
+            var actorDb = await _context.Actores.FirstOrDefaultAsync(actor => actor.Id == id);
+            if (actorDb == null)
+            {
+                return NotFound();
+            }
+
+            actorDb = _mapper.Map(agregarActorDTO, actorDb);
+
+            if (agregarActorDTO.Foto != null)
+            {
+                using (var memoryStream = new MemoryStream())
+                {
+                    await agregarActorDTO.Foto.CopyToAsync(memoryStream);
+                    var contenido = memoryStream.ToArray();
+                    var extension = Path.GetExtension(agregarActorDTO.Foto.FileName);
+                    actorDb.Foto = await _almacenadorArchivo
+                        .EditarArchivo(
+                            contenido, extension, _contenedor,
+                            actorDb.Foto, agregarActorDTO.Foto.ContentType
+                         );
+                }
+            }
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
+
+        [HttpPatch("{id:int}")]
+        public async Task<ActionResult> PatchActor (int id, [FromBody] JsonPatchDocument<ActorPatchDTO> patchDocument)
+        {
+            if (patchDocument == null)
+            {
+                return BadRequest();
+            }
+
+            var entidadDb = await _context.Actores.FirstOrDefaultAsync(actor => actor.Id == id);
+            if (entidadDb == null) { return NotFound(); }
+
+            var entidadDTO = _mapper.Map<ActorPatchDTO>(entidadDb);
+            patchDocument.ApplyTo(entidadDTO, ModelState);
+
+            var esValido = TryValidateModel(entidadDTO);
+
+            if (!esValido)
+            {
+                return BadRequest();
+            }
+
+            _mapper.Map(entidadDTO, entidadDb);
+
             await _context.SaveChangesAsync();
             return NoContent();
         }
 
         [HttpDelete("{id:int}")]
-        public async Task<ActionResult> DeleteActor(int idActor)
+        public async Task<ActionResult> DeleteActor(int id)
         {
             var existe = await _context.Actores
-                .AnyAsync(actor => actor.Id == idActor);
+                .AnyAsync(actor => actor.Id == id);
 
             if (!existe)
             {
                 return NotFound();
             }
 
-            _context.Remove(new Genero() { Id = idActor});
+            _context.Remove(new Actor() { Id = id});
             await _context.SaveChangesAsync();
 
             return NoContent();

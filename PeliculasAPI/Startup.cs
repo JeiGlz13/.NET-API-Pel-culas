@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PeliculasAPI.Servicios;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace PeliculasAPI
@@ -17,10 +18,13 @@ namespace PeliculasAPI
         {
             services.AddAutoMapper(typeof(Startup));
 
+            services.AddTransient<IAlmacenadorArchivos, AlmacenadorArchivos>();
+
             services.AddDbContext<ApplicationDbContext>(options => 
                     options.UseSqlServer(Configuration.GetConnectionString("DefaultConnection")));
             
-            services.AddControllers();
+            services.AddControllers()
+                    .AddNewtonsoftJson();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

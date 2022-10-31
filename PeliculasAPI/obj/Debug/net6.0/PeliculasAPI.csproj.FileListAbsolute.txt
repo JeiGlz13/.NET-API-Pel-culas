@@ -56,3 +56,13 @@ C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\runtim
 C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\obj\Debug\net6.0\PeliculasAPI.csproj.CopyComplete
 C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\AutoMapper.dll
 C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\AutoMapper.Extensions.Microsoft.DependencyInjection.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Azure.Core.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Azure.Storage.Blobs.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Azure.Storage.Common.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Microsoft.Bcl.AsyncInterfaces.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\System.IO.Hashing.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\System.Memory.Data.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Microsoft.AspNetCore.JsonPatch.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Newtonsoft.Json.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
