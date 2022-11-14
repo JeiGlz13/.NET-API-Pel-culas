@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "5LTzgjXg4eWMNzQVTPXi+TA5Ve5ogwLsQZe/mM/MQzJDc3uTRvX0EsAuaKUZkuhELFopAzIhgK3Q0raXRF0wXQ==",
+  "dgSpecHash": "1IzE6Y9/4FLbgDKZ4KdCQUZAbW+Sue8NZX/pWcmWlpe0z/7QImVooeF8Wb9cZ9Phpm30PGJVNElKRFGjIdYHpg==",
   "success": true,
   "projectFilePath": "C:\\Users\\jnurinda\\Desktop\\.NET\\PeliculasAPI\\PeliculasAPI\\PeliculasAPI.csproj",
   "expectedPackageFiles": [
@@ -49,6 +49,7 @@
     "C:\\Users\\jnurinda\\.nuget\\packages\\system.drawing.common\\4.7.0\\system.drawing.common.4.7.0.nupkg.sha512",
     "C:\\Users\\jnurinda\\.nuget\\packages\\system.identitymodel.tokens.jwt\\6.8.0\\system.identitymodel.tokens.jwt.6.8.0.nupkg.sha512",
     "C:\\Users\\jnurinda\\.nuget\\packages\\system.io.hashing\\6.0.0\\system.io.hashing.6.0.0.nupkg.sha512",
+    "C:\\Users\\jnurinda\\.nuget\\packages\\system.linq.dynamic.core\\1.2.23\\system.linq.dynamic.core.1.2.23.nupkg.sha512",
     "C:\\Users\\jnurinda\\.nuget\\packages\\system.memory.data\\1.0.2\\system.memory.data.1.0.2.nupkg.sha512",
     "C:\\Users\\jnurinda\\.nuget\\packages\\system.numerics.vectors\\4.5.0\\system.numerics.vectors.4.5.0.nupkg.sha512",
     "C:\\Users\\jnurinda\\.nuget\\packages\\system.runtime.caching\\4.7.0\\system.runtime.caching.4.7.0.nupkg.sha512",

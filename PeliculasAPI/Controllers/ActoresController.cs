@@ -12,7 +12,7 @@ namespace PeliculasAPI.Controllers
 {
     [ApiController]
     [Route("api/actores")]
-    public class ActoresController : ControllerBase
+    public class ActoresController : CustomBaseController
     {
         private readonly ApplicationDbContext _context;
         private readonly IMapper _mapper;
@@ -23,6 +23,7 @@ namespace PeliculasAPI.Controllers
             IMapper mapper
 ,           IAlmacenadorArchivos almacenadorArchivo
         )
+            :base(context, mapper)
         {
             _context = context;
             _mapper = mapper;
@@ -33,22 +34,13 @@ namespace PeliculasAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<List<ActorDTO>>> GetActores([FromQuery] PaginacionDTO paginacionDTO)
         {
-            var queryable = _context.Actores.AsQueryable();
-            await HttpContext.InsertarParametrosPaginacion(queryable, paginacionDTO.RegistrosPorPagina);
-            var entidades = await _context.Actores.Paginar(paginacionDTO).ToListAsync();
-            return _mapper.Map<List<ActorDTO>>(entidades);
+            return await Get<Actor, ActorDTO>(paginacionDTO);
         }
 
         [HttpGet("{id:int}", Name = "ObtenerActor")]
         public async Task<ActionResult<ActorDTO>> GetActor(int id)
         {
-            var entidad = await _context.Actores.FirstOrDefaultAsync(x => x.Id == id);
-            if (entidad == null)
-            {
-                return NotFound();
-            }
-
-            return _mapper.Map<ActorDTO>(entidad);
+            return await Get<Actor, ActorDTO>(id);
         }
 
         [HttpPost]
@@ -105,45 +97,13 @@ namespace PeliculasAPI.Controllers
         [HttpPatch("{id:int}")]
         public async Task<ActionResult> PatchActor (int id, [FromBody] JsonPatchDocument<ActorPatchDTO> patchDocument)
         {
-            if (patchDocument == null)
-            {
-                return BadRequest();
-            }
-
-            var entidadDb = await _context.Actores.FirstOrDefaultAsync(actor => actor.Id == id);
-            if (entidadDb == null) { return NotFound(); }
-
-            var entidadDTO = _mapper.Map<ActorPatchDTO>(entidadDb);
-            patchDocument.ApplyTo(entidadDTO, ModelState);
-
-            var esValido = TryValidateModel(entidadDTO);
-
-            if (!esValido)
-            {
-                return BadRequest();
-            }
-
-            _mapper.Map(entidadDTO, entidadDb);
-
-            await _context.SaveChangesAsync();
-            return NoContent();
+            return await Patch<Actor, ActorPatchDTO>(id, patchDocument);
         }
 
         [HttpDelete("{id:int}")]
         public async Task<ActionResult> DeleteActor(int id)
         {
-            var existe = await _context.Actores
-                .AnyAsync(actor => actor.Id == id);
-
-            if (!existe)
-            {
-                return NotFound();
-            }
-
-            _context.Remove(new Actor() { Id = id});
-            await _context.SaveChangesAsync();
-
-            return NoContent();
+            return await Delete<Actor>(id);
         }
     }
 }

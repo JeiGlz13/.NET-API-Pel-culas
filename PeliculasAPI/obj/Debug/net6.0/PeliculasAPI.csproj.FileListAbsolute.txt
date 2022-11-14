@@ -66,3 +66,4 @@ C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Micros
 C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.NewtonsoftJson.dll
 C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Newtonsoft.Json.dll
 C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\Newtonsoft.Json.Bson.dll
+C:\Users\jnurinda\Desktop\.NET\PeliculasAPI\PeliculasAPI\bin\Debug\net6.0\System.Linq.Dynamic.Core.dll
