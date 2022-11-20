@@ -20,10 +20,10 @@ namespace PeliculasAPI.Controllers
             return await Get<Genero, GeneroDTO>();
         }
 
-        [HttpGet("{idGenero:int}", Name = "obtenerGenero")]
-        public async Task<ActionResult<GeneroDTO>> GetGenero(int idGenero)
+        [HttpGet("{id:int}", Name = "obtenerGenero")]
+        public async Task<ActionResult<GeneroDTO>> GetGenero(int id)
         {
-            return await Get<Genero, GeneroDTO>(idGenero);
+            return await Get<Genero, GeneroDTO>(id);
         }
 
         [HttpPost]

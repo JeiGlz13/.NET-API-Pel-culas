@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using NetTopologySuite.Geometries;
 using PeliculasAPI;
 
 #nullable disable
@@ -17,10 +18,10 @@ namespace PeliculasAPI.Migrations
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "6.0.7")
+                .HasAnnotation("ProductVersion", "7.0.0")
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
-            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder, 1L, 1);
+            SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
             modelBuilder.Entity("PeliculasAPI.Entidades.Actor", b =>
                 {
@@ -28,7 +29,7 @@ namespace PeliculasAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<DateTime>("FechaNacimiento")
                         .HasColumnType("datetime2");
@@ -52,7 +53,7 @@ namespace PeliculasAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Nombre")
                         .IsRequired()
@@ -70,7 +71,7 @@ namespace PeliculasAPI.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<bool>("EnCines")
                         .HasColumnType("bit");
@@ -127,6 +128,47 @@ namespace PeliculasAPI.Migrations
                     b.ToTable("PeliculasGeneros");
                 });
 
+            modelBuilder.Entity("PeliculasAPI.Entidades.PeliculasSalaDeCine", b =>
+                {
+                    b.Property<int>("PeliculaId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("SalaDeCineId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PeliculaId", "SalaDeCineId");
+
+                    b.HasIndex("SalaDeCineId");
+
+                    b.ToTable("PeliculasSalasDeCines");
+                });
+
+            modelBuilder.Entity("PeliculasAPI.Entidades.SalaDeCine", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Nombre")
+                        .IsRequired()
+                        .HasMaxLength(120)
+                        .HasColumnType("nvarchar(120)");
+
+                    b.Property<int?>("SalaDeCineId")
+                        .HasColumnType("int");
+
+                    b.Property<Point>("Ubicacion")
+                        .HasColumnType("geography");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("SalaDeCineId");
+
+                    b.ToTable("SalasDeCine");
+                });
+
             modelBuilder.Entity("PeliculasAPI.Entidades.PeliculasActores", b =>
                 {
                     b.HasOne("PeliculasAPI.Entidades.Actor", "Actor")
@@ -165,6 +207,32 @@ namespace PeliculasAPI.Migrations
                     b.Navigation("Pelicula");
                 });
 
+            modelBuilder.Entity("PeliculasAPI.Entidades.PeliculasSalaDeCine", b =>
+                {
+                    b.HasOne("PeliculasAPI.Entidades.Pelicula", "Pelicula")
+                        .WithMany("PeliculasSalaDeCines")
+                        .HasForeignKey("PeliculaId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("PeliculasAPI.Entidades.SalaDeCine", "SalaDeCine")
+                        .WithMany()
+                        .HasForeignKey("SalaDeCineId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Pelicula");
+
+                    b.Navigation("SalaDeCine");
+                });
+
+            modelBuilder.Entity("PeliculasAPI.Entidades.SalaDeCine", b =>
+                {
+                    b.HasOne("PeliculasAPI.Entidades.SalaDeCine", null)
+                        .WithMany("PeliculasSalasDeCines")
+                        .HasForeignKey("SalaDeCineId");
+                });
+
             modelBuilder.Entity("PeliculasAPI.Entidades.Actor", b =>
                 {
                     b.Navigation("PeliculasActores");
@@ -180,6 +248,13 @@ namespace PeliculasAPI.Migrations
                     b.Navigation("PeliculasActores");
 
                     b.Navigation("PeliculasGeneros");
+
+                    b.Navigation("PeliculasSalaDeCines");
+                });
+
+            modelBuilder.Entity("PeliculasAPI.Entidades.SalaDeCine", b =>
+                {
+                    b.Navigation("PeliculasSalasDeCines");
                 });
 #pragma warning restore 612, 618
         }
