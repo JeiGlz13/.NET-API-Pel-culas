@@ -1,10 +1,14 @@
 ﻿using AutoMapper;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using NetTopologySuite;
 using NetTopologySuite.Geometries;
 using PeliculasAPI.Helpers;
 using PeliculasAPI.Servicios;
+using System.Text;
 
 [assembly: ApiConventionType(typeof(DefaultApiConventions))]
 namespace PeliculasAPI
@@ -26,6 +30,8 @@ namespace PeliculasAPI
 
             services.AddSingleton<GeometryFactory>(NtsGeometryServices.Instance.CreateGeometryFactory(srid: 4326));
 
+            services.AddScoped<PeliculaExisteAttribute>();
+
             services.AddSingleton(provider =>
                 new MapperConfiguration(config =>
                 {
@@ -41,6 +47,25 @@ namespace PeliculasAPI
             
             services.AddControllers()
                     .AddNewtonsoftJson();
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<ApplicationDbContext>()
+                .AddDefaultTokenProviders();
+
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = false,
+                        ValidateAudience = false,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        IssuerSigningKey = new SymmetricSecurityKey(
+                            Encoding.UTF8.GetBytes(Configuration["jwt:key"])
+                        ),
+                        ClockSkew = TimeSpan.Zero,
+                    }
+                );
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
